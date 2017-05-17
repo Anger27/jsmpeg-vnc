@@ -72,6 +72,8 @@ public class Jsmpeg_vnc {
 	protected boolean isExec = false;
 	private JTextField framerate_textfield;
 	private JCheckBox remote_checkBox;
+	private JButton excute_btn;
+	private JButton disconnect_btn;
 
 	/**
 	 * Launch the application.
@@ -175,22 +177,23 @@ public class Jsmpeg_vnc {
 			}
 		});
 		
-		JButton btnNewButton = new JButton("角青");
-		btnNewButton.addActionListener(new ActionListener() {
+		excute_btn = new JButton("立加");
+		excute_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				execute();
 			}
 		});
-		panel.add(btnNewButton, "cell 3 1,alignx left");
+		panel.add(excute_btn, "cell 3 1,alignx left");
 		panel.add(btnNewButton_1, "cell 2 2,alignx right");
 		
-		JButton button = new JButton("辆丰");
-		button.addActionListener(new ActionListener() {
+		disconnect_btn = new JButton("立加 秦力");
+		disconnect_btn.setEnabled(false);
+		disconnect_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				cancel();
 			}
 		});
-		panel.add(button, "cell 3 2,alignx left");
+		panel.add(disconnect_btn, "cell 3 2,alignx left");
 		
 		config_panel = new JPanel();
 		config_panel.setVisible(false);
@@ -312,6 +315,8 @@ public class Jsmpeg_vnc {
 			return;
 		}
 		isExec = true;
+		excute_btn.setEnabled(false);
+		disconnect_btn.setEnabled(true);
 		String cmd[] = option();
 		Access_vnc start_thread  = new Access_vnc(cmd);
 		start_thread.start();
@@ -327,6 +332,8 @@ public class Jsmpeg_vnc {
 			return;
 		}
 		isExec = false;
+		disconnect_btn.setEnabled(false);
+		excute_btn.setEnabled(true);
 		String cmd[] = {VNC_FILE_PATH+"vnc_exit.bat ","jsmpeg-vnc.exe"};
 		Access_vnc exit_thread  = new Access_vnc(cmd);
 		exit_thread.start();
