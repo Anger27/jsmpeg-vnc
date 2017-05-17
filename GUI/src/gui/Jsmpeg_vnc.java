@@ -56,7 +56,6 @@ public class Jsmpeg_vnc {
 	private JTextArea textPane;
 	private Thread_cmdexecuter ex;
 
-	private Cmdexec ce = Cmdexec.sharedInstance();
 	
 	/**
 	 * Launch the application.
@@ -93,7 +92,7 @@ public class Jsmpeg_vnc {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				
-				
+				ex.interrupt();
 				
 				super.windowClosing(e);
 			}
@@ -156,7 +155,7 @@ public class Jsmpeg_vnc {
 		JButton btnNewButton = new JButton("실행");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ce.execute();
+				execute();
 				
 			}
 		});
@@ -166,7 +165,7 @@ public class Jsmpeg_vnc {
 		JButton button = new JButton("종료");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				ex.interrupt();
 			}
 		});
 		panel.add(button, "cell 3 2,alignx left");
@@ -232,8 +231,127 @@ public class Jsmpeg_vnc {
 		textPane = new JTextArea();
 		scrollPane_1.setViewportView(textPane);
 	}
+	
+	private void execute(){
+		
+		ex = new Thread_cmdexecuter();
+		
+		ex.start();
+		
+		/*Cmdexec ce = Cmdexec.sharedInstance();
+		ce.execute();
+		BufferedReader br = ce.getReader();
 
+		String line;
+		while ((line = br.readLine()) != null) {
+			
+			textPane.append(line);
+			
+			System.out.println(line);
+			System.out.flush();
+		}*/
+		
+		
+		
+		
+		
+	}
+	
+	private void undo(){
+		
+	}
 	
 	
+
+	class Thread_cmdexecuter extends Thread {
+
+		private InputStream is = null;
+		private InputStreamReader isr = null;
+		private BufferedReader br = null;
+		private BufferedReader e_br = null;
+		private Runtime rt = null;
+		private Process proc = null;
+
+		@Override
+		public void run() {
+			System.out.println("쓰레드 실행");
+			
+				try {
+					//cmd /c D:\\Release\\jsmpeg-vnc.exe -s 1920x1080 -b 19440 -p 80 desktop
+					rt = Runtime.getRuntime();
+					proc = rt.exec(
+							"cmd /c D:\\Release\\jsmpeg-vnc.exe -s 1920x1080 -b 19440 -p 80 desktop"); // 시스템
+																														// 명령어
+					
+					rt.addShutdownHook(new Thread(new Shutdown()));
+					System.out.println("프로세스 실행");
+
+					is = proc.getInputStream();
+					isr = new InputStreamReader(is);
+					br = new BufferedReader(isr);
+					e_br = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+					
+					
+					String line = null;
+					while ((line = br.readLine()) != null) {
+						textPane.append(line + "\n");
+						
+						if(interrupted()){
+							while(e_br.readLine() != null);
+							Stop();
+							return;
+						}
+
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+					
+				}finally {
+					try {
+						proc.waitFor();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					System.out.println("Process run Thread 종료"+ proc.isAlive());
+					
+				}
+			
+
+			super.run();
+		}
+
+		@Override
+		public void interrupt() {
+			
+			
+			super.interrupt();
+		}
+		
+		private void Stop() {
+			try{
+				
+				proc.getErrorStream().close();
+				proc.getInputStream().close();
+				proc.getOutputStream().close();
+				is.close();
+				isr.close();
+				br.close();
+				proc.destroyForcibly();
+				System.out.println("destroy "+ proc.isAlive());
+			}catch (Exception e) {
+			}
+
+		}
+		
+	}
+	
+	class Shutdown implements Runnable{
+		@Override
+		public void run() {
+			System.out.println("종료?!");
+			
+		}
+	}
 
 }
