@@ -58,8 +58,14 @@
 		<div class="key key-small" data-code="27" id="key-esc">ESC</div>
 		<div class="key key-small" data-code="13" id="key-enter">ENTER</div>
 	</div>
-
-	<script type="text/javascript" src="jsmpg.js"></script>
-	<script type="text/javascript" src="jsmpg-vnc.js"></script>
+	<script>
+		var pwd = "passwords";
+		while(true){
+			var input = prompt("Input Passwords","");
+			if(pwd == input){break;}
+		}
+		<script type="text/javascript" src="jsmpg.js"></script>
+		<script type="text/javascript" src="jsmpg-vnc.js"></script>
+	</script>
 </body>
 </html>
