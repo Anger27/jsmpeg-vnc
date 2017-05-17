@@ -30,6 +30,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.JTextArea;
 
 /*
+ * GUI_ver0.2
+ * 
  * VNC with mpeg (ffmpeg)
  * server GUI program
  * 
