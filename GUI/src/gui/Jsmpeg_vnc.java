@@ -56,6 +56,8 @@ public class Jsmpeg_vnc {
 	private JTextArea textPane;
 	private Thread_cmdexecuter ex;
 
+	private Cmdexec ce = Cmdexec.sharedInstance();
+	
 	/**
 	 * Launch the application.
 	 */
@@ -154,6 +156,7 @@ public class Jsmpeg_vnc {
 		JButton btnNewButton = new JButton("½ÇÇà");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				ce.execute();
 				
 			}
 		});
@@ -229,6 +232,8 @@ public class Jsmpeg_vnc {
 		textPane = new JTextArea();
 		scrollPane_1.setViewportView(textPane);
 	}
+
+	
 	
 
 }
