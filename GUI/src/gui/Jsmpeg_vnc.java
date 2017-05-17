@@ -263,43 +263,6 @@ public class Jsmpeg_vnc {
 	}
 	
 	
-	private String[] option(){
-		//config_panel.isvisible
-		// true -> gettextfield
-		// false -> default
-		//cmd = new String[]{"cmd","/c","vnc_start.bat jsmpeg-vnc.exe -p 80"}
-		List<String> mList = new ArrayList<String>();
-		
-		mList.add("cmd");
-		mList.add("/c");
-		
-		String arg = "vnc_start.bat jsmpeg-vnc.exe";
-		//고급설정창이 띄워져있을때
-		if(config_veiw){
-			
-			if(!port_textfield.getText().equals(""))
-				arg= arg+" -p "+port_textfield.getText();
-			if(!bitrate_textfield.getText().equals(""))
-				arg= arg+" -b "+bitrate_textfield.getText();
-			if(!framerate_textfield.getText().equals(""))
-				arg= arg+" -f "+framerate_textfield.getText();
-			if(!windowsize_textfield.getText().equals(""))
-				arg= arg+" -s "+windowsize_textfield.getText();
-			if(!crop_textfield.getText().equals(""))
-				arg= arg+" -c "+crop_textfield.getText();
-			
-			arg = arg +" -i "+remote_checkBox.isSelected();
-		}
-		//고급설정 안하면 vnc에서 알아서 default 값 적용.
-		
-		mList.add(arg);
-		
-		
-
-		
-		return mList.toArray(new String[mList.size()]);
-	}
-	
 
 	//cmd : 파일명 [옵션] desktop
 	
@@ -312,7 +275,7 @@ public class Jsmpeg_vnc {
 			return;
 		}
 		isExec = true;
-		String cmd[] = option();
+		String cmd[] = {"cmd","/c","jsmpeg-vnc.exe"};
 		Access_vnc start_thread  = new Access_vnc(cmd);
 		start_thread.start();
 		
