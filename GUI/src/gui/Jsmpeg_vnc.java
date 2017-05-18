@@ -72,8 +72,6 @@ public class Jsmpeg_vnc {
 	protected boolean isExec = false;
 	private JTextField framerate_textfield;
 	private JCheckBox remote_checkBox;
-	private JButton excute_btn;
-	private JButton disconnect_btn;
 
 	/**
 	 * Launch the application.
@@ -110,7 +108,7 @@ public class Jsmpeg_vnc {
 	 */
 	private void initialize() {
 		frame = new JFrame(" [Server] Jsmpeg_vcn");
-		frame.setBounds(100, 100, 636, 635);
+		frame.setBounds(100, 100, 550, 635);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		frame.addWindowListener(new WindowAdapter() {
@@ -123,50 +121,39 @@ public class Jsmpeg_vnc {
 			}
 		});
 		
-		JMenuBar menuBar = new JMenuBar();
-		frame.getContentPane().add(menuBar, BorderLayout.NORTH);
-		
-		JMenu mnNewMenu = new JMenu("New menu");
-		menuBar.add(mnNewMenu);
-		
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem("New menu item");
-		mnNewMenu.add(mntmNewMenuItem_1);
-		
-		JMenuItem mntmNewMenuItem_2 = new JMenuItem("New menu item");
-		mnNewMenu.add(mntmNewMenuItem_2);
-		
-		JMenu mnNewMenu_1 = new JMenu("New menu");
-		menuBar.add(mnNewMenu_1);
-		
-		JMenuItem mntmNewMenuItem = new JMenuItem("New menu item");
-		mnNewMenu_1.add(mntmNewMenuItem);
-		
 		JScrollPane scrollPane = new JScrollPane();
 		frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 		
 		JPanel panel = new JPanel();
 		scrollPane.setViewportView(panel);
-		panel.setLayout(new MigLayout("", "[100.00,grow][10px:n:100px,grow]30[200px,left][79.00,grow]", "[10px][][][][][grow][grow][grow]"));
+		panel.setLayout(new MigLayout("", "[100.00][10px:n:100px,grow]30[]30[200px,left]", "[10px][][][][][grow][grow][grow]"));
 		
 		
 		
 		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new TitledBorder(null, "vnc", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.add(panel_2, "cell 0 1 3 1,grow");
+		panel_2.setBorder(new TitledBorder(null, "VNC", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.add(panel_2, "cell 0 1 4 1,grow");
 		panel_2.setLayout(new MigLayout("", "[100.00,grow][10px:n:100px,grow]30[200px,left]", "[]"));
+		
+		GetmyIP getip = new GetmyIP();
 		
 		JLabel label_1 = new JLabel("IP : ");
 		label_1.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_2.add(label_1, "cell 0 0,alignx right");
+		JLabel label_2 = new JLabel("   192.168.121.1");
+		panel_2.add(label_2, "cell 1 0,alignx left");
 		
-		GetmyIP getip = new GetmyIP();
-		JLabel label_2 = new JLabel(getip.myIP);
-		panel_2.add(label_2, "cell 1 0");
+		JLabel lblDefaultPort = new JLabel("default port : 8080");
+		panel_2.add(lblDefaultPort, "cell 2 0");
 		
-		JLabel label_3 = new JLabel("\uB0B4 IP\uC8FC\uC18C");
-		panel_2.add(label_3, "cell 2 0");
+		JButton btnNewButton = new JButton("Connect");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				execute();
+			}
+		});
 		
-		JButton btnNewButton_1 = new JButton("고급 설정");
+		JButton btnNewButton_1 = new JButton("Config");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				config_veiw = !config_veiw;
@@ -176,29 +163,21 @@ public class Jsmpeg_vnc {
 					//config_panel.setPreferredSize(preferredSize);
 			}
 		});
+		panel.add(btnNewButton_1, "cell 1 2,alignx right");
+		panel.add(btnNewButton, "cell 2 2,alignx left");
 		
-		excute_btn = new JButton("접속");
-		excute_btn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				execute();
-			}
-		});
-		panel.add(excute_btn, "cell 3 1,alignx left");
-		panel.add(btnNewButton_1, "cell 2 2,alignx right");
+		config_panel = new JPanel();
+		config_panel.setVisible(false);
 		
-		disconnect_btn = new JButton("접속 해제");
-		disconnect_btn.setEnabled(false);
-		disconnect_btn.addActionListener(new ActionListener() {
+		JButton btnExit = new JButton("Disconnect");
+		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				cancel();
 			}
 		});
-		panel.add(disconnect_btn, "cell 3 2,alignx left");
-		
-		config_panel = new JPanel();
-		config_panel.setVisible(false);
-		config_panel.setBorder(new TitledBorder(null, "고급", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.add(config_panel, "cell 0 3 3 1,grow");
+		panel.add(btnExit, "cell 3 2,alignx left");
+		config_panel.setBorder(new TitledBorder(null, "Config", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.add(config_panel, "cell 0 3 4 1,grow");
 		config_panel.setLayout(new MigLayout("", "[100.00,grow][10px:n:100px,grow]30[200px,left]", "[][][][][][]"));
 		
 		
@@ -209,8 +188,8 @@ public class Jsmpeg_vnc {
 		port_textfield.setColumns(10);
 		config_panel.add(port_textfield, "cell 1 0,growx");
 		
-		JLabel label_10 = new JLabel("\uD3EC\uD2B8 \uC8FC\uC18C \uC9C0\uC815 1234567890123456789");
-		config_panel.add(label_10, "cell 2 0");
+		JLabel lblPortdefault = new JLabel("port (default: 8080)");
+		config_panel.add(lblPortdefault, "cell 2 0");
 		
 		JLabel label_6 = new JLabel("Bitrate : ");
 		config_panel.add(label_6, "cell 0 1,alignx right");
@@ -219,8 +198,8 @@ public class Jsmpeg_vnc {
 		bitrate_textfield.setColumns(10);
 		config_panel.add(bitrate_textfield, "cell 1 1,growx");
 		
-		JLabel label_15 = new JLabel("New label");
-		config_panel.add(label_15, "flowx,cell 2 1");
+		JLabel lblBitrateInKilobits = new JLabel("bitrate in kilobit/s");
+		config_panel.add(lblBitrateInKilobits, "flowx,cell 2 1");
 		
 		JLabel label = new JLabel("Framerate : ");
 		config_panel.add(label, "cell 0 2,alignx trailing");
@@ -229,8 +208,8 @@ public class Jsmpeg_vnc {
 		framerate_textfield.setColumns(10);
 		config_panel.add(framerate_textfield, "cell 1 2,growx");
 		
-		JLabel label_12 = new JLabel("New label");
-		config_panel.add(label_12, "cell 2 2");
+		JLabel lblTargetFrameratedefault = new JLabel("target framerate (default: 60)");
+		config_panel.add(lblTargetFrameratedefault, "cell 2 2");
 		
 		JLabel label_7 = new JLabel("Window size : ");
 		config_panel.add(label_7, "cell 0 3,alignx right");
@@ -239,29 +218,34 @@ public class Jsmpeg_vnc {
 		windowsize_textfield.setColumns(10);
 		config_panel.add(windowsize_textfield, "cell 1 3,growx");
 		
-		JLabel label_13 = new JLabel("New label");
-		config_panel.add(label_13, "cell 2 3");
+		JLabel lblOutputSizeAs = new JLabel("output size (WxH)");
+		config_panel.add(lblOutputSizeAs, "cell 2 3");
 		
-		JLabel label_8 = new JLabel("remote : ");
-		config_panel.add(label_8, "cell 0 4,alignx right");
+		JLabel lblRemote = new JLabel("Remote : ");
+		config_panel.add(lblRemote, "cell 0 4,alignx right");
 		
 		remote_checkBox = new JCheckBox("enable");
 		config_panel.add(remote_checkBox, "cell 1 4");
 		
-		JLabel label_14 = new JLabel("New label");
-		config_panel.add(label_14, "cell 2 4");
+		JLabel lblEnabledisableRemoteInput = new JLabel("enable/disable remote input");
+		config_panel.add(lblEnabledisableRemoteInput, "cell 2 4");
 		
-		JLabel label_9 = new JLabel("crop : ");
-		config_panel.add(label_9, "cell 0 5,alignx right");
+		JLabel lblCrop = new JLabel("Crop : ");
+		config_panel.add(lblCrop, "cell 0 5,alignx right");
 		
 		crop_textfield = new JTextField();
 		crop_textfield.setColumns(10);
 		config_panel.add(crop_textfield, "cell 1 5,growx");
 		
+		JLabel lblxY = new JLabel("crop area in the captured window (X,Y,W,H)");
+		config_panel.add(lblxY, "cell 2 5");
+		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		panel.add(scrollPane_1, "cell 0 5 3 3,grow");
+		panel.add(scrollPane_1, "cell 0 5 4 3,grow");
 		
 		textPane = new JTextArea();
+		textPane.setText("Usage : http://" + getip.myIP + ":8080\n");
+		textPane.setEditable(false);
 		scrollPane_1.setViewportView(textPane);
 	}
 	
@@ -310,13 +294,11 @@ public class Jsmpeg_vnc {
 		//start.bat 실행
 		//Thread 통해 실행
 		if(isExec){
-			System.out.println("이미 실행중입니다.");
-			textPane.append("오류 : 이미 실행중입니다.\n");
+			System.out.println("Already running.");
+			textPane.append("Error : Already running.\n");
 			return;
 		}
 		isExec = true;
-		excute_btn.setEnabled(false);
-		disconnect_btn.setEnabled(true);
 		String cmd[] = option();
 		Access_vnc start_thread  = new Access_vnc(cmd);
 		start_thread.start();
@@ -328,12 +310,10 @@ public class Jsmpeg_vnc {
 	private void cancel(){
 		//taskkill.bat 실행
 		if(!isExec){
-			System.out.println("실행 중이 아닙니다.");
+			System.out.println("Not running.");
 			return;
 		}
 		isExec = false;
-		disconnect_btn.setEnabled(false);
-		excute_btn.setEnabled(true);
 		String cmd[] = {VNC_FILE_PATH+"vnc_exit.bat ","jsmpeg-vnc.exe"};
 		Access_vnc exit_thread  = new Access_vnc(cmd);
 		exit_thread.start();
@@ -361,13 +341,13 @@ public class Jsmpeg_vnc {
 			while ((line = sbr.readLine()) != null) {
 				//textPane.append(line + "\n");
 				if(line.contains("not exist")){
-					textPane.append("오류 : jsmpeg-vnc.exe 파일이 없습니다.\n");
+					textPane.append("error : Not found files : jsmpeg-vnc.exe.\n");
 				}
 				if(line.contains("exist")){
-					textPane.append("실행 : jsmpeg-vnc.exe\n");
+					textPane.append("connect : jsmpeg-vnc.exe\n");
 				}
-				if(line.contains("성공")){
-					textPane.append("종료 : jsmpeg-vnc.exe\n");
+				if(line.contains("종료")){
+					textPane.append("disconnect : jsmpeg-vnc.exe\n");
 				}
 			}
 			}catch (Exception e) {
