@@ -140,7 +140,7 @@ public class Jsmpeg_vnc {
 		JLabel label_1 = new JLabel("IP : ");
 		label_1.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_2.add(label_1, "cell 0 0,alignx right");
-		JLabel label_2 = new JLabel("   192.168.121.1");
+		JLabel label_2 = new JLabel(getip.myIP);
 		panel_2.add(label_2, "cell 1 0,alignx left");
 		
 		JLabel lblDefaultPort = new JLabel("default port : 8080");
