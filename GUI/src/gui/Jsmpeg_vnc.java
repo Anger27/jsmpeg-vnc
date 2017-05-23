@@ -107,7 +107,7 @@ public class Jsmpeg_vnc {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame(" [Server] Jsmpeg_vcn");
+		frame = new JFrame(" [Server] Jsmpeg_vnc");
 		frame.setBounds(100, 100, 550, 635);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -116,7 +116,7 @@ public class Jsmpeg_vnc {
 			public void windowClosing(WindowEvent e) {
 				//프로세스 종료!! taskkill.bat 실행
 
-				
+				cancel();
 				super.windowClosing(e);
 			}
 		});
